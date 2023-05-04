@@ -1,6 +1,8 @@
 import discord
 from discord import app_commands
 import asyncio
+import PySimpleGUI as sgui
+from enum import Enum
 
 class Client(discord.Client):
     tree = None
@@ -27,3 +29,65 @@ class Client(discord.Client):
 #To run...
 # client = Client()
 # client.run(TOKENSTR)
+
+class ClientUIEvents(Enum):
+    EXIT = 0
+
+class ClientUI():
+
+    window = None
+    windowLayout = []
+
+    def __init__(self):
+        self.create_UI()
+        return
+    
+    def create_UI(self):
+        menu_def = [
+            ["Client", ["Change Client Token", "Change DEBUG Channel ID"]],
+            ["Window", ["Change Theme"]],
+            ["Help", "About YuriOS"]        
+                    ]
+        menu = sgui.Menu(menu_def)
+        self.add_to_layout_vertical([menu])
+
+        self.add_to_layout_vertical([sgui.Text("Welcome to yClient User Interface.")])
+        
+        #Event Log
+        eventLogCanvas = sgui.Canvas(background_color="#000", size=(600, 600), expand_x = True, expand_y = True)
+        self.add_to_layout_vertical([eventLogCanvas])
+
+        
+        self.add_to_layout(sgui.Button("Shut Down", size = (10, 2)), rowIndex=2)
+        return
+    
+    def add_to_layout_vertical(self, items, index=None):
+        if index is None:
+            self.windowLayout.append(items)
+        else:
+            self.windowLayout.insert(index, items)
+        return
+
+    def add_to_layout(self, items, columnIndex=None, rowIndex=None):
+        if rowIndex is None:
+            if columnIndex is None:
+                self.windowLayout[len(self.windowLayout) - 1].append(items)
+            else:
+                self.windowLayout[len(self.windowLayout) - 1].insert(columnIndex, items)
+        else:
+            if columnIndex is None:
+                self.windowLayout[rowIndex].append(items)
+            else:
+                self.windowLayout[rowIndex].insert(columnIndex, items)
+        
+        return
+
+    def monitor_event(self, event):
+        if event == "Shut Down" or event == sgui.WIN_CLOSED:
+            return ClientUIEvents.EXIT
+
+    def run(self):
+        print(self.windowLayout)
+        self.window = sgui.Window(title="yClient for Discord", layout = self.windowLayout, margins=(100, 50))
+        event, values = self.window.read()
+        return event, values
