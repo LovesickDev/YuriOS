@@ -1,7 +1,7 @@
 from yDiscord import yClient
 from yDiscord.yClient import ClientUIEvents
 
-class yuriOS:
+class yuriOS: #old stuff change later
     discordBot = None
 
     def __init__(self) -> None:
