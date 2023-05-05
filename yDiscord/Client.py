@@ -3,6 +3,7 @@ from discord import app_commands
 import asyncio
 import PySimpleGUI as sgui
 from enum import Enum
+from Logs import LoggingSystem
 
 class Client(discord.Client):
     tree = None
