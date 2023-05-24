@@ -1,27 +1,52 @@
 from yDiscord import Client
 from yDiscord.Client import ClientUIEvents
+import asyncio
+import threading
 
-class yuriOS: #old stuff change later
+class yuriOS:
+    async_loop = None
+
     discordBot = None
+    discordTkn = None
+    ui = None
 
     def __init__(self) -> None:
-        print("Module Initialized.")
+        tknfile = open('./../discord.txt', 'r')
+        self.discordBot = Client.Client()
+        self.discordTkn = tknfile.read()
+        #print(self.discordTkn)
         pass
 
-    def run_discord(self, tkn) -> None:
+    def run_discord(self) -> None:
+        print("connect")
+        self.discordBot.run(self.discordTkn)
 
-        self.discordBot = Client.Client()
-        self.discordBot.run(tkn)
+    async def stop_discord(self) -> None:
+        await self.discordBot.close()
+        self.discordBot = None
+    
+    async def update_ui(self) -> None:
+        print("2")
+        self.ui = Client.ClientUI()
 
+        while True: #ui loop example
+            await asyncio.sleep(0.1)
+            event, values = self.ui.run()
+            #you need to manage the events within whatever loop you want to use
+            if self.ui.monitor_event(event) == ClientUIEvents.EXIT:
+                print("Putting the window out of its misery x-x..")
+                break
+            
+        self.ui.window.close()
 
-#UI STUFF
-ui = Client.ClientUI()
+    async def run_ui(self):
+            await asyncio.gather(self.update_ui())
+    
+    def run(self):
+        discordbot_thread = threading.Thread(target=self.run_discord)
+        discordbot_thread.start()
 
-while True: #ui loop example
-    event, values = ui.run()
-    #you need to manage the events within whatever loop you want to use
-    if ui.monitor_event(event) == ClientUIEvents.EXIT:
-        print("Putting the window out of its misery x-x..")
-        break
+        asyncio.run(self.run_ui())
 
-ui.window.close()
+_yos = yuriOS()
+asyncio.run(_yos.run())

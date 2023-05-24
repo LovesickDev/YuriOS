@@ -1,32 +1,35 @@
 import discord
 from discord import app_commands
+from discord.ext import commands
 import asyncio
 import PySimpleGUI as sgui
 from enum import Enum
-from Logs import LoggingSystem
+#from Logs import LoggingSystem
+
+#TODO tree has cmds but it isnt showing up on discord for some reason
 
 class Client(discord.Client):
-    tree = None
-    guildID = 1030675232245174393 #Your GUILD ID (Set to None to be able to use cmds everywhere - it takes an hour for commands to be registered if set to None)
+    guildID = 1055368762796290079 #Your GUILD ID (Set to None to be able to use cmds everywhere - it takes an hour for commands to be registered if set to None)
 
     def __init__(self):
         intents = discord.Intents.default()
         intents.message_content = True
         super().__init__(intents=intents)
-
-    def def_cmds(self):
         self.tree = app_commands.CommandTree(self)
+    
+    def setup_cmd_tree(self):
 
-        @self.tree.command(name='hi', description='Just saying hi!', guild=discord.Object(id=self.guildID))
-        async def hi(interaction):
-            await interaction.response.send_message("Hi")
+        @self.tree.command(name="hi", description="Greetings!")
+        async def hi(ctx):
+            ctx.send("Hello!!")
+        
 
     async def on_ready(self):
-        self.def_cmds()
-        await self.tree.sync(guild=discord.Object(id=self.guildID))
+        self.setup_cmd_tree()
+        await self.tree.sync(guild=self.get_guild(self.guildID))
         print(f"Logged on as {self.user}!")
         await self.change_presence(activity=discord.Activity(type=discord.ActivityType.listening, name="Murine Cops - Cuphead OST"))
-
+        print(self.tree.get_commands())
 #To run...
 # client = Client()
 # client.run(TOKENSTR)
@@ -88,7 +91,6 @@ class ClientUI():
             return ClientUIEvents.EXIT
 
     def run(self):
-        print(self.windowLayout)
         self.window = sgui.Window(title="yClient for Discord", layout = self.windowLayout, margins=(100, 50))
         event, values = self.window.read()
         return event, values

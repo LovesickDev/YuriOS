@@ -36,7 +36,9 @@ class LoggingSystem: #Static Class
     
 
 class LogInstance:
-    _msg, _type, _time = None
+    _msg = None 
+    _type = None
+    _time = None
 
     def __init__(self, message, type: LogTypes) -> None:
         _msg = str(message)
