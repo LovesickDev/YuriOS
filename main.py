@@ -2,6 +2,7 @@ from yDiscord import Client
 from yDiscord.Client import ClientUIEvents
 import asyncio
 import threading
+import Logs
 
 class yuriOS:
     async_loop = None
@@ -18,7 +19,7 @@ class yuriOS:
         pass
 
     def run_discord(self) -> None:
-        print("connect")
+        Logs.LoggingSystem.log("connect")
         self.discordBot.run(self.discordTkn)
 
     async def stop_discord(self) -> None:
@@ -49,4 +50,4 @@ class yuriOS:
         asyncio.run(self.run_ui())
 
 _yos = yuriOS()
-asyncio.run(_yos.run())
+_yos.run()

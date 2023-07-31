@@ -58,11 +58,11 @@ class ClientUI():
         self.add_to_layout_vertical([sgui.Text("Welcome to yClient User Interface.")])
         
         #Event Log
-        eventLogCanvas = sgui.Canvas(background_color="#000", size=(600, 600), expand_x = True, expand_y = True)
-        self.add_to_layout_vertical([eventLogCanvas])
+        eventLog = sgui.Output(background_color="#000", size=(10, 20), expand_x = True, expand_y = True)
+        self.add_to_layout_vertical([eventLog])
 
         
-        self.add_to_layout(sgui.Button("Shut Down", size = (10, 2)), rowIndex=2)
+        self.add_to_layout_vertical([sgui.Button("Shut Down", size = (10, 2))])
         return
     
     def add_to_layout_vertical(self, items, index=None):

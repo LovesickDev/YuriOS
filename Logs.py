@@ -1,6 +1,7 @@
 from enum import Enum
 from datetime import datetime
 import time
+import sys
 
 class LogTypes(Enum):
     DEFAULT = 0
@@ -18,6 +19,7 @@ class LoggingSystem: #Static Class
         '''Append a new log.'''
         logInstance = LogInstance(logmsg, level)
         LoggingSystem.recordedLogs.append(logInstance)
+        sys.stdout.write(logmsg)
 
     def error(errorMsg, kill=False):
         LoggingSystem.log(errorMsg, LogTypes.ERROR)
